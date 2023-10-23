@@ -3,5 +3,6 @@
 export("%>%")
 export(SimServer)
 export(SimUI)
+export(precision_simulation)
 export(simulation_app)
 importFrom(magrittr,"%>%")

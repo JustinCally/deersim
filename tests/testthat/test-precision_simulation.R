@@ -1,7 +1,7 @@
 test_that("simulation works", {
-  buff <- public_land_shape("Mount Buffalo National Park")
-  roads <- intersecting_roads(buff)
-  road_buff <- road_buffer(buff, roads)
+  buff <- deersim:::public_land_shape("Mount Buffalo National Park")
+  roads <- deersim:::intersecting_roads(buff)
+  road_buff <- deersim:::road_buffer(buff, roads)
   pr_sim <- precision_simulation(sampling_area = road_buff,
                                  survey_area = buff,
                                  n_sites = 10,

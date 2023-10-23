@@ -1,3 +1,14 @@
+#' Generate a simulation of abundance estimates for selected sites
+#'
+#' @param deployment_weeks weeks to deploy cameras for
+#' @param sampling_area area to sample within (i.e., can be resricted around roads)
+#' @param survey_area total area to estimate abundance for (e.g. full National Park)
+#' @param n_sites number of camera sites
+#' @param species species (Sambar, Fallow, Red and Hog)
+#' @param sampling_type type of sampling to use (hexagonal or random)
+#'
+#' @return list
+#' @export
 precision_simulation <- function(deployment_weeks = 10,
                                  sampling_area,
                                  survey_area,
