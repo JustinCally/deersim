@@ -1,11 +1,14 @@
+buff <- public_land_shape("Mount Buffalo National Park")
+roads <- intersecting_roads(buff)
 test_that("plm shape works", {
-  buff <- public_land_shape("Mount Buffalo National Park")
+  expect_s3_class(buff, "sf")
 })
 
 test_that("road shape works", {
-  roads <- intersecting_roads(buff)
+  expect_s3_class(roads, "sf")
 })
 
-test_that("road shape works", {
+test_that("overlapping area and road shape works", {
   road_buff <- road_buffer(buff, roads)
+  expect_s3_class(road_buff, "sfc_MULTIPOLYGON")
 })

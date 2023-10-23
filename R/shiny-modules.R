@@ -109,11 +109,11 @@ SimServer <- function(id) {
         if(!is.null(input$shapefile)) {
           area_shape <- sf::st_read(input$shapefile)
         } else {
-        area_shape <- deersim::public_land_shape(input$area)
+        area_shape <- public_land_shape(input$area)
         }
         if(input$roads) {
-        road_shape <- deersim::intersecting_roads(shape = area_shape, buffer = max(input$roadrange))
-        sampling_shape <- deersim::road_buffer(area = area_shape,
+        road_shape <- intersecting_roads(shape = area_shape, buffer = max(input$roadrange))
+        sampling_shape <- road_buffer(area = area_shape,
                                   roads = road_shape,
                                   min_distance = min(input$roadrange),
                                   max_distance = max(input$roadrange))
@@ -121,7 +121,7 @@ SimServer <- function(id) {
           sampling_shape <- area_shape
         }
 
-        sample_data <- deersim::precision_simulation(deployment_weeks = input$weeks,
+        sample_data <- precision_simulation(deployment_weeks = input$weeks,
                                             sampling_area = sampling_shape,
                                             survey_area = area_shape,
                                             n_sites = input$sites,
@@ -140,31 +140,30 @@ SimServer <- function(id) {
                                     weight = 2,
                                     color = "black")
 
-        output$variation <- renderPlot({
+        output$variation <- shiny::renderPlot({
           df <- data.frame(Estimates = sample_data[["abundance_estimates"]])
           ggplot2::ggplot() +
-            ggplot2::geom_histogram(data = df, ggplot2::aes(x = Estimates), fill = "grey30") +
+            ggplot2::geom_histogram(data = df, ggplot2::aes(x = .data[["Estimates"]]), fill = "grey30") +
             ggplot2::geom_vline(xintercept = sample_data[["abundance_true"]],
                                 linetype = "dashed", colour = "darkred", linewidth = 1.5) +
             ggplot2::ggtitle("Range of expected abundance \nestimates for the area",
                              subtitle = paste0("CV = ", round(sample_data[["CV"]], 2), "\n",
                                               "90 % CI = ",
-                                              round(quantile(sample_data[["abundance_estimates"]], 0.05)),
+                                              round(stats::quantile(sample_data[["abundance_estimates"]], 0.05)),
                                               " - ",
-                                              round(quantile(sample_data[["abundance_estimates"]], 0.95)))) +
+                                              round(stats::quantile(sample_data[["abundance_estimates"]], 0.95)))) +
             ggplot2::xlab("Simulated vs True Abundance") +
             ggplot2::theme_bw()
         })
 
         # Download data
 
-        output$downloadData <- downloadHandler(
+        output$downloadData <- shiny::downloadHandler(
           filename <- function() {
             "Sampling_Locations.zip"
 
           },
           content = function(file) {
-            withProgress(message = "Exporting Data", {
 
               tmp.path <- dirname(file)
 
@@ -178,11 +177,9 @@ SimServer <- function(id) {
                            driver = "ESRI Shapefile", quiet = TRUE)
 
               zip::zipr(zipfile = name.zip, files = Sys.glob(name.glob))
-              req(file.copy(name.zip, file))
+              shiny::req(file.copy(name.zip, file))
 
               if (length(Sys.glob(name.glob)) > 0) file.remove(Sys.glob(name.glob))
-
-            })
           }
         )
 

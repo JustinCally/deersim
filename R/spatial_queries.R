@@ -11,7 +11,7 @@ intersecting_roads <- function(shape, buffer = 250) {
   shape_buffer <- shape %>% sf::st_transform(3111) %>% sf::st_buffer(buffer)
 
   road_select <- VicmapR::vicmap_query("open-data-platform:tr_road") %>%
-    VicmapR::filter(INTERSECTS(shape_buffer)) %>%
+    VicmapR::filter(VicmapR::INTERSECTS(shape_buffer)) %>%
     VicmapR::collect(quiet = TRUE)
 
   return(road_select)

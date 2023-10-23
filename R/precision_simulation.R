@@ -13,7 +13,7 @@ precision_simulation <- function(deployment_weeks = 10,
   det_p <- 0.297
 
   # Average availability
-  availability = rbeta(1, 215, 181)
+  availability = stats::rbeta(1, 215, 181)
 
   survey_area_3111 <- survey_area %>%
     sf::st_transform(3111) %>%
@@ -44,7 +44,7 @@ precision_simulation <- function(deployment_weeks = 10,
   dens_est <- matrix(nrow = length(sampled_sites), ncol = 1000)
 
   for(i in 1:length(sampled_sites)) {
-    raw_counts[i,] <- rnbinom(1000,mu=abundance_est[i,species_idx]*det_p*availability*survey_effort,size=abundance_est[i,species_idx]^2/((sd_est[i,species_idx]^2)-abundance_est[i,species_idx]))
+    raw_counts[i,] <- stats::rnbinom(1000,mu=abundance_est[i,species_idx]*det_p*availability*survey_effort,size=abundance_est[i,species_idx]^2/((sd_est[i,species_idx]^2)-abundance_est[i,species_idx]))
     dens_est[i,] <- raw_counts[i,] /(det_p*availability*survey_effort)
   }
 
@@ -62,7 +62,7 @@ precision_simulation <- function(deployment_weeks = 10,
 
   final_return <- list(abundance_estimates = ab_mean,
                        abundance_true = true_ab,
-                       CV = sd(ab_mean)/mean(ab_mean),
+                       CV = stats::sd(ab_mean)/mean(ab_mean),
                        sampling_locations = dplyr::bind_cols(sf::st_as_sf(sampled_sites), abundance_est) %>%
                          sf::st_set_geometry("geometry") %>%
                          sf::st_transform(7844),

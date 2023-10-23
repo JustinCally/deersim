@@ -1,3 +1,12 @@
+#' Run site simulation app
+#'
+#' @return shiny app
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' simulation_app()
+#' }
 simulation_app <- function() {
   # Setup load packages
   options(shiny.maxRequestSize = 30*1024^2)
