@@ -20,7 +20,7 @@ Imports:
     rmapshaper,
     sf,
     shiny,
-    shinycssloaders,
+    shinycssloaders (>= 1.0.0.9011),
     shinyWidgets,
     terra,
     units,
@@ -31,3 +31,5 @@ Depends:
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Remotes:  
+    daattali/shinycssloaders
