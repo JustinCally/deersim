@@ -45,7 +45,7 @@ SimUI <- function(id,
                                                                               size = 10)),
                                                   shiny::conditionalPanel("input.area.length == 0",
                                                                           ns = ns,
-                                                  shiny::fileInput(ns("shapefile"), "Choose Shapefile", accept = c(".shp", "geojson"))),
+                                                  shiny::fileInput(ns("shapefile"), "Import GeoJSON", accept = c(".geojson"))),
                                                   shinyWidgets::materialSwitch(
                                                     inputId = ns("roads"),
                                                     label = "Filter samples to be nearby tracks/roads",
@@ -106,8 +106,8 @@ SimServer <- function(id) {
 
       shiny::observeEvent(input$runsim, {
         shinycssloaders::showPageSpinner(background = "#FFFFFFD0", type = 6, caption = "Processing")
-        if(!is.null(input$shapefile)) {
-          area_shape <- sf::st_read(input$shapefile)
+        if(!all(is.null(input$shapefile))) {
+          area_shape <- sf::st_read(input$shapefile$datapath)
         } else {
         area_shape <- public_land_shape(input$area)
         }
