@@ -1,7 +1,7 @@
 Package: deersim
 Type: Package
 Title: What the Package Does (Title Case)
-Version: 0.1.1
+Version: 0.1.2
 Author: Who wrote it
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
@@ -20,6 +20,7 @@ Imports:
     rmapshaper,
     sf,
     shiny,
+    shinyalert,
     shinycssloaders (>= 1.0.0.9011),
     shinyWidgets,
     terra,
