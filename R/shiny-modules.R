@@ -1,10 +1,5 @@
-info_text <- "As a potentially useful resource.We have published a small accompanying web app to conduct simulations of sampling sites using camera trap distance sampling deployments in Victoria (https://justincally.shinyapps.io/deersim/). This app allows for:
-        1. Selection of an area (custom) or predefined public land parcel to conduct surveys (e.g. Alpine National Park)
-        2. Selection of how many sites to sample and for how many weeks cameras should be deployed
-        3. Whether to restrict sampling to be a set distance from the road/track network.
-        4. Which species to estimate abundance for.
-
-        The output of the simulation then provides (i) a downloadable shapefile of the proposed sampling locations and (ii) a figure that shows the estimated precision (coefficient of variation) of the estimate and the range of deer abundance that would be expected to reside within the sampling area. The underlying R code used to simulate sampling and build the shiny app available here: https://github.com/JustinCally/deersim."
+info_text <- "This web app conducts simulations of sampling sites using camera trap distance sampling deployments in Victoria (https://justincally.shinyapps.io/deersim/) to guide site selection for deer surveys.
+The output of the simulation provides (i) a downloadable shapefile of the proposed sampling locations and (ii) a figure that shows the estimated precision (coefficient of variation) of the estimate and the range of deer abundance that would be expected to reside within the sampling area. The underlying R code used to simulate sampling and build the shiny app available here: https://github.com/JustinCally/deersim."
 #' Shiny Map UI for Projects
 #'
 #' @description Shiny module creating an interactive project map
