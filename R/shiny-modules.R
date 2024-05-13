@@ -45,6 +45,12 @@ SimUI <- function(id,
                                                                               liveSearch = TRUE,
                                                                               liveSearchNormalize = TRUE,
                                                                               size = 10)),
+                                                  shinyWidgets::pickerInput(ns("sampling"), "Sampling Type",
+                                                                            choices = c("hexagonal", "random", "regular"),
+                                                                            selected = "hexagonal",
+                                                                            multiple = FALSE,
+                                                                            options = shinyWidgets::pickerOptions(
+                                                                              size = 10)),
                                                   shiny::conditionalPanel("input.area.length == 0",
                                                                           ns = ns,
                                                   shiny::fileInput(ns("shapefile"), "Import GeoJSON", accept = c(".geojson"))),
@@ -144,7 +150,8 @@ SimServer <- function(id) {
                                             sampling_area = sampling_shape,
                                             survey_area = area_shape,
                                             n_sites = input$sites,
-                                            species = input$species)
+                                            species = input$species,
+                                            relative = TRUE, pois = T, sampling_type = input$sampling)
 
         shinycssloaders::hidePageSpinner()
 
@@ -165,13 +172,13 @@ SimServer <- function(id) {
             ggplot2::geom_histogram(data = df, ggplot2::aes(x = .data[["Estimates"]]), fill = "grey30") +
             ggplot2::geom_vline(xintercept = sample_data[["abundance_true"]],
                                 linetype = "dashed", colour = "darkred", linewidth = 1.5) +
-            ggplot2::ggtitle("Range of expected abundance \nestimates for the area",
+            ggplot2::ggtitle("Range of expected relative abundance \nestimates for the area (deer encounters per day)",
                              subtitle = paste0("CV = ", round(sample_data[["CV"]], 2), "\n",
                                               "90 % CI = ",
-                                              round(stats::quantile(sample_data[["abundance_estimates"]], 0.05)),
+                                              round(stats::quantile(sample_data[["abundance_estimates"]], 0.05), 2),
                                               " - ",
-                                              round(stats::quantile(sample_data[["abundance_estimates"]], 0.95)))) +
-            ggplot2::xlab("Simulated vs True Abundance") +
+                                              round(stats::quantile(sample_data[["abundance_estimates"]], 0.95), 2))) +
+            ggplot2::xlab("Simulated vs True Relative Abundance") +
             ggplot2::theme_bw()
         })
 

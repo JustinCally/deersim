@@ -14,7 +14,9 @@ precision_simulation <- function(deployment_weeks = 10,
                                  survey_area,
                                  n_sites,
                                  species = c("Sambar", "Fallow", "Red", "Hog"),
-                                 sampling_type = "hexagonal") {
+                                 sampling_type = "hexagonal",
+                                 relative = F,
+                                 pois = F) {
 
   # Survey effort: snapshot moments
   dep_times <- lubridate::seconds(lubridate::weeks(deployment_weeks))/2
@@ -39,8 +41,8 @@ precision_simulation <- function(deployment_weeks = 10,
                                  size = n_sites,
                                  type = sampling_type)
 
-  combined_raster <- terra::rast("https://raw.githubusercontent.com/JustinCally/statewide-deer-analysis/main/outputs/rasters/combined_deer_average_density.tif")
-  combined_sd_raster <- terra::rast("https://raw.githubusercontent.com/JustinCally/statewide-deer-analysis/main/outputs/rasters/combined_deer_sd.tif")
+  combined_raster <- terra::rast("https://raw.githubusercontent.com/JustinCally/statewide-deer-analysis/private-land/outputs/rasters/combined_deer_average_density.tif")
+  combined_sd_raster <- terra::rast("https://raw.githubusercontent.com/JustinCally/statewide-deer-analysis/private-land/outputs/rasters/combined_deer_sd.tif")
 
   abundance_area <- terra::extract(combined_raster, terra::vect(survey_area_3111), ID = F, na.rm=TRUE)
   abundance_est <- terra::extract(combined_raster, terra::vect(sampled_sites), ID = F, na.rm=TRUE, method = "bilinear")
@@ -54,9 +56,25 @@ precision_simulation <- function(deployment_weeks = 10,
   raw_counts <- matrix(nrow = length(sampled_sites), ncol = 1000)
   dens_est <- matrix(nrow = length(sampled_sites), ncol = 1000)
 
+  RN <- sqrt(c(0.114,0.021,0.047,0.064))
+
   for(i in 1:length(sampled_sites)) {
-    raw_counts[i,] <- stats::rnbinom(1000,mu=abundance_est[i,species_idx]*det_p*availability*survey_effort,size=abundance_est[i,species_idx]^2/((sd_est[i,species_idx]^2)-abundance_est[i,species_idx]))
+
+    if(pois) {
+    raw_counts[i,] <- stats::rnbinom(1000,
+                                   mu=abundance_est[i,species_idx]*det_p*availability*survey_effort,
+                                   size = RN[species_idx])
+    } else {
+
+    raw_counts[i,] <- stats::rnbinom(1000,
+                                     mu=abundance_est[i,species_idx]*det_p*availability*survey_effort,
+                                     size=abundance_est[i,species_idx]^2/((sd_est[i,species_idx]^2)-abundance_est[i,species_idx]))
+    }
+    if(relative) {
+      dens_est[i,] <- raw_counts[i,] /(deployment_weeks*7)
+    } else {
     dens_est[i,] <- raw_counts[i,] /(det_p*availability*survey_effort)
+    }
   }
 
   dens_mean <- vector()
@@ -68,12 +86,16 @@ precision_simulation <- function(deployment_weeks = 10,
 
   # grand_mean <- mean(ab_mean)
   # grand_cv <- sd(ab_mean)/grand_mean
-
+if(relative) {
+  true_ab <- mean(abundance_est[,species_idx])*det_p*availability*survey_effort/(deployment_weeks*7)
+} else {
   true_ab <- sum(abundance_area[,species_idx], na.rm = TRUE)
+}
 
-  final_return <- list(abundance_estimates = ab_mean,
+
+  final_return <- list(abundance_estimates = if(relative) dens_mean else ab_mean,
                        abundance_true = true_ab,
-                       CV = stats::sd(ab_mean)/mean(ab_mean),
+                       CV = stats::sd(dens_mean)/mean(dens_mean),
                        sampling_locations = dplyr::bind_cols(sf::st_as_sf(sampled_sites), abundance_est) %>%
                          sf::st_set_geometry("geometry") %>%
                          sf::st_transform(7844),
