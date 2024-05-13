@@ -10,7 +10,9 @@ precision_simulation(
   survey_area,
   n_sites,
   species = c("Sambar", "Fallow", "Red", "Hog"),
-  sampling_type = "hexagonal"
+  sampling_type = "hexagonal",
+  relative = F,
+  pois = F
 )
 }
 \arguments{
@@ -25,6 +27,10 @@ precision_simulation(
 \item{species}{species (Sambar, Fallow, Red and Hog)}
 
 \item{sampling_type}{type of sampling to use (hexagonal or random)}
+
+\item{relative}{relative abundance metric instead of absolute}
+
+\item{pois}{use a distribution closer to poisson (still negbinom though) than the neg binomial}
 }
 \value{
 list

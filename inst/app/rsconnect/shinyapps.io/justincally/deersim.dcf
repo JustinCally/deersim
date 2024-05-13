@@ -5,7 +5,7 @@ account: justincally
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 11127188
-bundleId: 8558040
+bundleId: 8607650
 url: https://justincally.shinyapps.io/deersim/
 version: 1
 asMultiple: FALSE

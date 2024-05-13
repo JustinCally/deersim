@@ -6,6 +6,8 @@
 #' @param n_sites number of camera sites
 #' @param species species (Sambar, Fallow, Red and Hog)
 #' @param sampling_type type of sampling to use (hexagonal or random)
+#' @param relative relative abundance metric instead of absolute
+#' @param pois use a distribution closer to poisson (still negbinom though) than the neg binomial
 #'
 #' @return list
 #' @export
