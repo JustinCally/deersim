@@ -1,12 +1,12 @@
 name: deersim
 title: deersim
-username: justincally
-account: justincally
+username: arisci
+account: arisci
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
-appId: 11127188
-bundleId: 9086312
-url: https://justincally.shinyapps.io/deersim/
+appId: 12673849
+bundleId: 9086329
+url: https://arisci.shinyapps.io/deersim/
 version: 1
 asMultiple: FALSE
 asStatic: FALSE

@@ -161,6 +161,10 @@ SimServer <- function(id) {
           leaflet::removeControl("legend") %>%
           leaflet::clearShapes() %>%
           leaflet::setView(lng = 145, lat = -37, zoom = 6) %>%
+          leaflet::addPolygons(data = area_shape %>%
+                                 sf::st_transform(7844), fillColor = "grey50", fillOpacity = 0.15, color = "darkred", weight = 2) %>%
+          leaflet::addPolygons(data = sampling_shape %>%
+                                 sf::st_transform(7844), fillColor = "grey50", fillOpacity = 0.2, weight = 0) %>%
           leaflet::addCircleMarkers(data = sample_data[["sampling_locations"]],
                                     fillOpacity=0.6,
                                     fillColor="Red",
